@@ -98,7 +98,7 @@ if user_input:
                 st.markdown(response.text)
                 st.session_state.messages.append({"role": "assistant", "content": response.text})
             except Exception as e:
-                st.error("تأكدي من ربط مفتاح الـ API بشكل صحيح في الكود.")
+                st.error("AIzaSyDRDbpLkuoNscCiALpmAwTBjr_WSAhwhNQ")
 
 # رسالة ترحيبية إذا كانت المحادثة فارغة
 if not st.session_state.messages:
