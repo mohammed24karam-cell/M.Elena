@@ -4,13 +4,10 @@ from PIL import Image
 
 # --- 1. إعدادات المحرك (الذكاء الاصطناعي) ---
 # حطي الكود السري تبعك (الذي يبدأ بـ AIza) بين علامتي التنصيص هنا:
-API_KEY = "AIzaSyDRDbpLkuoNscCiALpmAwTBjr_WSAhwhNQ" 
+API_KEY = "AIzaSyDRDbpLkuoNscCiALpmAwTBjr_WSAhwhNQ"
 
-if API_KEY != "AIzaSyDRDbpLkuoNscCiALpmAwTBjr_WSAhwhNQ":
-    genai.configure(api_key=API_KEY)
-    model = genai.GenerativeModel('gemini-1.5-flash')
-else:
-    st.warning("AIzaSyDRDbpLkuoNscCiALpmAwTBjr_WSAhwhNQ")
+genai.configure(api_key=API_KEY)
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 # --- 2. إعدادات واجهة المستخدم والتصميم ---
 st.set_page_config(page_title="M.Elena AI", layout="wide")
