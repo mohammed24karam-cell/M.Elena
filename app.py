@@ -2,156 +2,84 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>مشروع المرحلة الخامسة المتكامل | 2026</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المرحلة الخامسة - النسخة الكاملة</title>
     <style>
-        /* [المرحلة 1 & 2]: الألوان والهوية البصرية */
-        :root {
-            --primary-blue: #0984e3;      /* أزرق احترافي للمهام */
-            --accent-purple: #6c5ce7;    /* بنفسجي للمسات الجمالية */
-            --bg-light: #f1f2f6;        /* خلفية مريحة للعين */
-            --white: #ffffff;
-            --text-dark: #2d3436;
-        }
-
+        /* التنسيق العام */
         body {
-            font-family: 'Tajawal', 'Cairo', sans-serif;
-            background: var(--bg-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
             margin: 0;
-            padding: 30px;
+            padding: 20px;
             display: flex;
             justify-content: center;
         }
 
-        /* [المرحلة 3 & 4]: هيكل الحاوية والمنطق التنظيمي */
-        .main-wrapper {
-            background: var(--white);
-            width: 100%;
-            max-width: 850px;
-            border-radius: 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-            border-top: 12px solid var(--primary-blue);
-            animation: fadeIn 0.8s ease;
-        }
-
-        .header-bg {
-            background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
-            color: white;
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        .content-body {
-            padding: 40px;
-        }
-
-        /* [المرحلة 5]: اللمسات الجمالية وحركات التفاعل */
-        .feature-card {
-            background: #f9f9f9;
-            margin-bottom: 20px;
-            padding: 20px;
-            border-radius: 15px;
-            border-right: 6px solid var(--primary-blue);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .feature-card:hover {
-            transform: scale(1.03) translateX(-5px);
+        /* الحاوية الرئيسية */
+        .container {
             background: white;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            border-right-color: var(--accent-purple);
+            max-width: 600px;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-top: 8px solid #0984e3;
         }
 
-        .step-label {
-            font-weight: bold;
-            color: var(--primary-blue);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-        }
-
-        .btn-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 30px;
-        }
-
-        .btn {
+        /* العناوين */
+        h1 { color: #2d3436; text-align: center; font-size: 24px; }
+        
+        /* البطاقات الصغيرة */
+        .card {
+            background: #f8f9fa;
+            border-right: 5px solid #0984e3;
             padding: 15px;
-            border: none;
-            border-radius: 12px;
-            font-family: 'Tajawal', sans-serif;
-            font-weight: bold;
-            cursor: pointer;
+            margin: 15px 0;
+            border-radius: 8px;
             transition: 0.3s;
         }
 
-        .btn-main { background: var(--primary-blue); color: white; }
-        .btn-outline { background: #dfe6e9; color: var(--text-dark); }
+        .card:hover { transform: scale(1.02); background: #eef2f7; }
 
-        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* الأزرار */
+        .btn-box { display: flex; gap: 10px; margin-top: 20px; }
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
         }
+        .save-btn { background: #00b894; color: white; }
+        .reset-btn { background: #dfe6e9; color: #2d3436; }
+
+        .btn:hover { opacity: 0.8; }
     </style>
 </head>
 <body>
 
-    <div class="main-wrapper">
-        <div class="header-bg">
-            <h1 style="margin: 0; font-size: 2.2rem;">المشروع المدمج النهائي ✨</h1>
-            <p style="opacity: 0.9;">تم تجميع كافة المراحل (1-5) في نظام واحد</p>
-        </div>
+    <div class="container">
+        <h1>✨ مشروع المرحلة الخامسة ✨</h1>
+        <p style="text-align: center; color: #636e72;">تم دمج كل المراحل بنجاح</p>
 
-        <div class="content-body">
-            <div class="feature-card">
-                <div>
-                    <span class="step-label">المرحلة 1 & 2</span>
-                    <h3 style="margin: 5px 0;">تنسيق WPS والمحتوى التعليمي</h3>
-                </div>
-                <span>📝</span>
-            </div>
-
-            <div class="feature-card">
-                <div>
-                    <span class="step-label">المرحلة 3</span>
-                    <h3 style="margin: 5px 0;">المعالجة الفنية والتصميم البصري</h3>
-                </div>
-                <span>🎨</span>
-            </div>
-
-            <div class="feature-card">
-                <div>
-                    <span class="step-label">المرحلة 4</span>
-                    <h3 style="margin: 5px 0;">برمجة الربط والمنطق الذكي</h3>
-                </div>
-                <span>💻</span>
-            </div>
-
-            <div class="feature-card" style="border-right-color: #00b894;">
-                <div>
-                    <span class="step-label">المرحلة 5</span>
-                    <h3 style="margin: 5px 0;">الواجهة النهائية وتجربة المستخدم</h3>
-                </div>
-                <span>🚀</span>
-            </div>
-
-            <div class="btn-group">
-                <button class="btn btn-main" onclick="alert('تم حفظ كل شيء بنجاح!')">حفظ العمل الجديد</button>
-                <button class="btn btn-outline" onclick="location.reload()">إعادة تحميل الواجهة</button>
-            </div>
+        <div class="card">
+            <strong>المرحلة 1-3:</strong> تنسيق المحتوى ومعالجة الصور.
         </div>
         
-        <footer style="text-align: center; padding: 20px; color: #b2bec3; font-size: 0.8rem;">
-            تطوير ذكي | جميع المراحل مدمجة | 2026
-        </footer>
+        <div class="card">
+            <strong>المرحلة 4:</strong> البرمجة والمنطق البرمجي.
+        </div>
+
+        <div class="card" style="border-right-color: #6c5ce7;">
+            <strong>المرحلة 5:</strong> الواجهة الجمالية النهائية.
+        </div>
+
+        <div class="btn-box">
+            <button class="btn save-btn" onclick="alert('تم الحفظ!')">حفظ العمل</button>
+            <button class="btn reset-btn" onclick="location.reload()">تحديث</button>
+        </div>
     </div>
 
 </body>
