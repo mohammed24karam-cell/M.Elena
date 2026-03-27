@@ -18,7 +18,7 @@ with st.sidebar:
     gender = st.radio("من المتحدث الآن؟", ["بنت", "شاب"], index=0)
     lang = st.selectbox("لغة الحوار:", ["العربية الفصحى", "العامية السورية", "العامية العراقية", "English"])
 
-# تصميم الشعار الوردي الكيوت
+# تصميم الشعار الوردي
 accent = "#FF69B4" if gender == "بنت" else "#1A237E"
 st.markdown(f'<h1 style="text-align:center; color:{accent}; font-size:50px;">✨ M.Elena ✨</h1>', unsafe_allow_html=True)
 
@@ -38,9 +38,8 @@ if user_input:
 
     with st.chat_message("assistant"):
         try:
-            # هنا السطر اللي كان فيه المشكلة وصلحته
             response = model.generate_content(f"أنت مساعدة ذكية اسمك M.Elena، ردي بـ {lang}: " + user_input)
             st.markdown(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
-       except Exception as e:
+        except Exception as e:
             st.error(f"حدث خطأ بسيط: {e}")
