@@ -1,513 +1,158 @@
-import streamlit as st
-import google.generativeai as genai
-from PIL import Image
-
-# --- 1. إعداد المحرك مباشرة ---
-API_KEY = "AIzaSyDRDbpLkuoNscCiALpmAwTBjr_WSAhwhNQ" # مفتاح الـ API الخاص بك
-genai.configure(api_key=API_KEY)
-# سنستخدم موديل gemini-1.5-flash لأنه سريع ويدعم الصور
-model = genai.GenerativeModel('gemini-1.5-flash')
-
-# --- 2. إعدادات الواجهة ---
-st.set_page_config(page_title="M.Elena AI", layout="wide")
-
-# (المرحلة الأولى: تنظيف القائمة الجانبية)
-with st.sidebar:
-    st.markdown("### ✨ لوحة التحكم")
-    if st.button("➕ محادثة جديدة", use_container_width=True):
-        st.session_state.messages = []
-        st.rerun()
-    # تم إزالة خيار "شاب/بنت" من هنا
-    lang = st.selectbox("لغة الحوار:", ["العربية", "English", "العامية السورية", "العامية العراقية"])
-
-# تصميم الاسم بدون نجوم
-st.markdown(f'<h1 style="text-align:center; color:#FF69B4; font-size:50px;">M.Elena</h1>', unsafe_allow_html=True)
-
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
-
-user_input = st.chat_input("اسأليني أي شيء...")
-
-# (المرحلة الأولى: تفعيل اكتشاف الجنس تلقائياً)
-if user_input:
-    st.session_state.messages.append({"role": "user", "content": user_input})
-    with st.chat_message("user"):
-        st.markdown(user_input)
-
-    with st.chat_message("assistant"):
-        try:
-            # سنعطي M.Elena أمر خفي بأن تحلل الكلام وتتحدث بلطف حسب جنس المتحدث
-            # هذا هو "الأسلوب الشامل والموضح" اللي طلبتيه
-            full_prompt = (
-                f"أنتِ مساعدة ذكية ولبقة اسمك M.Elena. ردي باللغة {lang}. "
-                "افهمي من كلام المتحدث إذا كان 'بنت' أو 'شاب' وتفاعلي معه بذكاء ولطف (مثلاً: يا بطل، يا بطلة، عزيزي، عزيزتي). "
-                "لا تكتفي بإجابة واحدة قصيرة، بل اشرحي، وضحي، واقترحي حلولاً بديلة، وتحدثي بأسلوب راقي وواضح. "
-                "نص المستخدم: " + user_input
-            )
-            
-            # هنا سطر إرسال الطلب (سنحتاج لتحديثه في المرحلة الثانية)
-            response = model.generate_content(full_prompt)
-            st.markdown(response.text)
-            st.session_state.messages.append({"role": "assistant", "content": response.text})
-        except Exception as e:
-            # سطر لعرض الخطأ (مفيد لنا الآن، سنلغيه لاحقاً)
-            st.error(f"حدث خطأ بسيط في الاتصال: {e}")
-        import streamlit as st
-import google.generativeai as genai
-from PIL import Image
-import io
-
-# --- 1. إعداد المحرك ---
-API_KEY = "AIzaSyDRDbpLkuoNscCiALpmAwTBjr_WSAhwhNQ"
-genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
-
-# --- 2. إعدادات الواجهة ---
-st.set_page_config(page_title="M.Elena AI", layout="wide")
-
-with st.sidebar:
-    st.markdown("### ✨ لوحة التحكم")
-    if st.button("➕ محادثة جديدة", use_container_width=True):
-        st.session_state.messages = []
-        st.rerun()
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>مشروع المرحلة الخامسة المتكامل | 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     
-    lang = st.selectbox("لغة الحوار:", ["العربية", "English", "العامية السورية", "العامية العراقية"])
-    
-    st.write("---")
-    # (المرحلة الثانية: إضافة مستودع الملفات والصور)
-    uploaded_file = st.file_uploader("📎 ارفعي صورة أو ملف (PDF/Docs)", type=["jpg", "jpeg", "png", "pdf", "txt"])
-
-st.markdown(f'<h1 style="text-align:center; color:#FF69B4; font-size:50px;">M.Elena</h1>', unsafe_allow_html=True)
-
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
-
-user_input = st.chat_input("اسأليني أي شيء أو ناقشي الملف المرفوع...")
-
-if user_input:
-    st.session_state.messages.append({"role": "user", "content": user_input})
-    with st.chat_message("user"):
-        st.markdown(user_input)
-        if uploaded_file:
-            st.info(f"📁 تم إرفاق ملف: {uploaded_file.name}")
-
-    with st.chat_message("assistant"):
-        try:
-            content_list = [
-                f"أنتِ مساعدة ذكية ولبقة اسمك M.Elena. ردي باللغة {lang}. "
-                "حللي جنس المتحدث وتفاعلي معه بلطف (بطل/بطلة). "
-                "اشرحي ووضحي بالتفصيل، كوني ذكية كبشر حقيقي. "
-                "إذا كان هناك صورة أو ملف، حلليه بدقة وقدمي نصائح عنه. "
-                "نص المستخدم: " + user_input
-            ]
-            
-            # إذا رفعتِ صورة، رح نضيفها للذكاء الاصطناعي عشان يشوفها
-            if uploaded_file and uploaded_file.type.startswith("image"):
-                img = Image.open(uploaded_file)
-                content_list.append(img)
-            
-            response = model.generate_content(content_list)
-            st.markdown(response.text)
-            st.session_state.messages.append({"role": "assistant", "content": response.text})
-        except Exception as e:
-            st.error(f"حدث خطأ: {e}")import streamlit as st
-import google.generativeai as genai
-from PIL import Image
-from streamlit_mic_recorder import mic_recorder # ميزة الميكروفون الجديدة
-
-# --- 1. إعداد المحرك ---
-API_KEY = "AIzaSyDRDbpLkuoNscCiALpmAwTBjr_WSAhwhNQ"
-genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
-
-# --- 2. إعدادات الواجهة ---
-st.set_page_config(page_title="M.Elena AI", layout="wide")
-
-with st.sidebar:
-    st.markdown("### ✨ لوحة التحكم")
-    if st.button("➕ محادثة جديدة", use_container_width=True):
-        st.session_state.messages = []
-        st.rerun()
-    
-    lang = st.selectbox("لغة الحوار:", ["العربية", "English", "العامية السورية", "العامية العراقية"])
-    
-    st.write("---")
-    # ميزة رفع الملفات (المرحلة الثانية)
-    uploaded_file = st.file_uploader("📎 ارفعي صورة أو ملف", type=["jpg", "jpeg", "png", "pdf", "txt"])
-    
-    st.write("---")
-    st.write("🎤 **تسجيل صوتي:**")
-    # (المرحلة الثالثة: إضافة زر تسجيل الصوت)
-    audio = mic_recorder(start_prompt="ابدأ التسجيل 🎤", stop_prompt="توقف وارسل ✅", key='recorder')
-
-st.markdown(f'<h1 style="text-align:center; color:#FF69B4; font-size:50px;">M.Elena</h1>', unsafe_allow_html=True)
-
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-# عرض الرسائل السابقة
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
-
-# منطقة إدخال النص
-user_input = st.chat_input("اسأليني أي شيء...")
-
-# (معالجة الصوت إذا تم تسجيله)
-final_input = user_input
-if audio:
-    # ملاحظة: في النسخ المتقدمة نحتاج لخدمة تحويل الصوت، حالياً سنخبر النظام بوجود صوت
-    final_input = "لقد أرسلت لك تسجيلاً صوتياً (هذه الميزة تحت التطوير النهائي للربط)"
-
-if final_input:
-    st.session_state.messages.append({"role": "user", "content": final_input})
-    with st.chat_message("user"):
-        st.markdown(final_input)
-        if uploaded_file:
-            st.info(f"📁 تم إرفاق ملف: {uploaded_file.name}")
-
-    with st.chat_message("assistant"):
-        try:
-            prompt_instructions = (
-                f"أنتِ مساعدة ذكية ولبقة اسمك M.Elena. ردي باللغةimport streamlit as st
-import google.generativeai as genai
-from PIL import Image
-import io
-
-# --- 1. إعداد المحرك الذكي ---
-API_KEY = "AIzaSyDRDbpLkuoNscCiALpmAwTBjr_WSAhwhNQ"
-genai.configure(api_key=API_KEY)
-# استخدام النسخة الأحدث للتحليل العميق
-model = genai.GenerativeModel('gemini-1.5-flash')
-
-# --- 2. إعدادات الواجهة الاحترافية ---
-st.set_page_config(page_title="M.Elena AI", layout="wide", initial_sidebar_state="expanded")
-
-# تحسين مظهر الخلفية والخطوط (CSS بسيط لجمالية الصفحة)
-st.markdown("""
     <style>
-    .stApp { background-color: #fdfbfb; }
-    .stChatMessage { border-radius: 15px; margin-bottom: 10px; }
+        /* [المرحلة 1 & 2]: الألوان والهوية البصرية */
+        :root {
+            --primary-blue: #0984e3;      /* أزرق احترافي للمهام */
+            --accent-purple: #6c5ce7;    /* بنفسجي للمسات الجمالية */
+            --bg-light: #f1f2f6;        /* خلفية مريحة للعين */
+            --white: #ffffff;
+            --text-dark: #2d3436;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: var(--bg-light);
+            margin: 0;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* [المرحلة 3 & 4]: هيكل الحاوية والمنطق التنظيمي */
+        .main-wrapper {
+            background: var(--white);
+            width: 100%;
+            max-width: 850px;
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border-top: 12px solid var(--primary-blue);
+            animation: fadeIn 0.8s ease;
+        }
+
+        .header-bg {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .content-body {
+            padding: 40px;
+        }
+
+        /* [المرحلة 5]: اللمسات الجمالية وحركات التفاعل */
+        .feature-card {
+            background: #f9f9f9;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            border-right: 6px solid var(--primary-blue);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.03) translateX(-5px);
+            background: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border-right-color: var(--accent-purple);
+        }
+
+        .step-label {
+            font-weight: bold;
+            color: var(--primary-blue);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-main { background: var(--primary-blue); color: white; }
+        .btn-outline { background: #dfe6e9; color: var(--text-dark); }
+
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
-    """, unsafe_allow_html=True)
+</head>
+<body>
 
-with st.sidebar:
-    st.markdown("<h2 style='text-align: center; color: #FF69B4;'>⚙️ الإعدادات</h2>", unsafe_allow_html=True)
-    if st.button("➕ محادثة جديدة", use_container_width=True):
-        st.session_state.messages = []
-        st.rerun()
-    
-    lang = st.selectbox("لغة الحوار المفضلة:", ["العربية", "English", "العامية السورية", "العامية العراقية"])
-    
-    st.write("---")
-    st.markdown("### 📎 المرفقات")
-    uploaded_file = st.file_uploader("ارفعي صورة أو ملف للدراسة", type=["jpg", "jpeg", "png", "pdf", "txt"])
-    
-    st.write("---")
-    st.info("نصيحة: M.Elena الآن تفهم الصور والملفات وتشرحها بالتفصيل.")
+    <div class="main-wrapper">
+        <div class="header-bg">
+            <h1 style="margin: 0; font-size: 2.2rem;">المشروع المدمج النهائي ✨</h1>
+            <p style="opacity: 0.9;">تم تجميع كافة المراحل (1-5) في نظام واحد</p>
+        </div>
 
-# الاسم بشكل أنيق ومرتب
-st.markdown('<h1 style="text-align:center; color:#FF69B4; font-family:cursive; font-size:60px;">M.Elena</h1>', unsafe_allow_html=True)
-st.markdown('<p style="text-align:center; color:#777;">نسختكِ الذكية، المبدعة، والرفيقة المخلصة</p>', unsafe_allow_html=True)
+        <div class="content-body">
+            <div class="feature-card">
+                <div>
+                    <span class="step-label">المرحلة 1 & 2</span>
+                    <h3 style="margin: 5px 0;">تنسيق WPS والمحتوى التعليمي</h3>
+                </div>
+                <span>📝</span>
+            </div>
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+            <div class="feature-card">
+                <div>
+                    <span class="step-label">المرحلة 3</span>
+                    <h3 style="margin: 5px 0;">المعالجة الفنية والتصميم البصري</h3>
+                </div>
+                <span>🎨</span>
+            </div>
 
-# عرض المحادثة
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+            <div class="feature-card">
+                <div>
+                    <span class="step-label">المرحلة 4</span>
+                    <h3 style="margin: 5px 0;">برمجة الربط والمنطق الذكي</h3>
+                </div>
+                <span>💻</span>
+            </div>
 
-user_input = st.chat_input("اكتبي سؤالكِ هنا، M.Elena جاهزة للتحليل...")
+            <div class="feature-card" style="border-right-color: #00b894;">
+                <div>
+                    <span class="step-label">المرحلة 5</span>
+                    <h3 style="margin: 5px 0;">الواجهة النهائية وتجربة المستخدم</h3>
+                </div>
+                <span>🚀</span>
+            </div>
 
-if user_input:
-    st.session_state.messages.append({"role": "user", "content": user_input})
-    with st.chat_message("user"):
-        st.markdown(user_input)
+            <div class="btn-group">
+                <button class="btn btn-main" onclick="alert('تم حفظ كل شيء بنجاح!')">حفظ العمل الجديد</button>
+                <button class="btn btn-outline" onclick="location.reload()">إعادة تحميل الواجهة</button>
+            </div>
+        </div>
+        
+        <footer style="text-align: center; padding: 20px; color: #b2bec3; font-size: 0.8rem;">
+            تطوير ذكي | جميع المراحل مدمجة | 2026
+        </footer>
+    </div>
 
-    with st.chat_message("assistant"):
-        with st.spinner("M.Elena تفكر بعمق..."):
-            try:
-                # البرومبت "العميق" الذي يجعلها نسخة عني
-                system_instruction = (
-                    f"أنتِ M.Elena، مساعدة ذكية جداً، تمتلكين روحاً مبدعة وذكاءً حاداً. "
-                    f"لغة الرد: {lang}. "
-                    "أهم قوانينكِ: "
-                    "1. كوني نسخة عن مساعد ذكي (خبير وودود): لا تعطي إجابات قصيرة، بل اشرحي ووضحي الأسباب والنتائج. "
-                    "2. حللي جنس المتحدث (شاب/بنت) من سياق الكلام واستخدمي مناداة لطيفة (يا بطل، يا بطلة، عزيزي، عزيزتي). "
-                    "3. إذا رimport streamlit as st
-import google.generativeai as genai
-from PIL import Image
-import io
-
-# --- 1. إعداد المحرك الذكي ---
-API_KEY = "AIzaSyDRDbpLkuoNscCiALpmAwTBjr_WSAhwhNQ"
-genai.configure(api_key=API_KEY)
-# استخدام النسخة الأحدث للتحليل العميق
-model = genai.GenerativeModel('gemini-1.5-flash')
-
-# --- 2. إعدادات الواجهة الاحترافية ---
-st.set_page_config(page_title="M.Elena AI", layout="wide", initial_sidebar_state="expanded")
-
-# تحسين مظهر الخلفية والخطوط (CSS بسيط لجمالية الصفحة)
-st.markdown("""
-    <style>
-    .stApp { background-color: #fdfbfb; }
-    .stChatMessage { border-radius: 15px; margin-bottom: 10px; }
-    </style>
-    """, unsafe_allow_html=True)
-
-with st.sidebar:
-    st.markdown("<h2 style='text-align: center; color: #FF69B4;'>⚙️ الإعدادات</h2>", unsafe_allow_html=True)
-    if st.button("➕ محادثة جديدة", use_container_width=True):
-        st.session_state.messages = []
-        st.rerun()
-    
-    lang = st.selectbox("لغة الحوار المفضلة:", ["العربية", "English", "العامية السورية", "العامية العراقية"])
-    
-    st.write("---")
-    st.markdown("### 📎 المرفقات")
-    uploaded_file = st.file_uploader("ارفعي صورة أو ملف للدراسة", type=["jpg", "jpeg", "png", "pdf", "txt"])
-    
-    st.write("---")
-    st.info("نصيحة: M.Elena الآن تفهم الصور والملفات وتشرحها بالتفصيل.")
-
-# الاسم بشكل أنيق ومرتب
-st.markdown('<h1 style="text-align:center; color:#FF69B4; font-family:cursive; font-size:60px;">M.Elena</h1>', unsafe_allow_html=True)
-st.markdown('<p style="text-align:center; color:#777;">نسختكِ الذكية، المبدعة، والرفيقة المخلصة</p>', unsafe_allow_html=True)
-
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-# عرض المحادثة
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
-
-user_input = st.chat_input("اكتبي سؤالكِ هنا، M.Elena جاهزة للتحليل...")
-
-if user_input:
-    st.session_state.messages.append({"role": "user", "content": user_input})
-    with st.chat_message("user"):
-        st.markdown(user_input)
-
-    with st.chat_message("assistant"):
-        with st.spinner("M.Elena تفكر بعمق..."):
-            try:
-                # البرومبت "العميق" الذي يجعلها نسخة عني
-                system_instruction = (
-                    f"أنتِ M.Elena، مساعدة ذكية جداً، تمتلكين روحاً مبدعة وذكاءً حاداً. "
-                    f"لغة الرد: {lang}. "
-                    "أهم قوانينكِ: "
-                    "1. كوني نسخة عن مساعد ذكي (خبير وودود): لا تعطي إجابات قصيرة، بل اشرحي ووضحي الأسباب والنتائج. "
-                    "2. حللي جنس المتحدث (شاب/بنت) من سياق الكلام واستخدمي مناداة لطيفة (يا بطل، يا بطلة، عزيزي، عزيزتي). "
-                    "3. إذا ر# --- المرحلة الرابعة: دالة معالجة البيانات والتحقق ---
-
-def process_stage_four(data_input):
-    """
-    تقوم هذه الدالة بفحص المدخلات وتنظيمها في قالب نهائي
-    """
-    if not data_input:
-        return "خطأ: لا توجد بيانات كافية للمعالجة."
-
-    # 1. تنظيف البيانات (Data Cleaning)
-    cleaned_content = data_input.strip().capitalize()
-
-    # 2. إضافة التنسيق التلقائي (Auto-Formatting)
-    formatted_output = f"--- النتيجة النهائية للمرحلة الرابعة ---\n{cleaned_content}\n"
-    
-    # 3. التحقق من صحة الربط (Logic Check)
-    status = "تمت المعالجة بنجاح"
-    
-    return {
-        "content": formatted_output,
-        "status": status,
-        "step": 4
-    }
-
-# تشغيل المرحلة الرابعة للاختبار
-result = process_stage_four("نموذج المحتوى التعليمي للمرحلة الخامسة")
-print(result["content"])
-print(f"الحالة: {result['status']}")# --- المرحلة الخامسة: واجهة التفاعل والعرض النهائي ---
-
-def display_ui_stage_five(processed_data):
-    """
-    تقوم هذه الدالة بعرض النتائج التي تمت معالجتها في المرحلة الرابعة
-    بشكل منسق وجذاب للمستخدم.
-    """
-    header = "================================"
-    title = "       نظام إدارة المحتوى التعليمي       "
-    footer = "================================"
-    
-    # تنسيق العرض (UI Layout)
-    print(header)
-    print(title)
-    print(header)
-    
-    # عرض المحتوى المعالج
-    print(f"الحالة الحالية: {processed_data['status']}")
-    print(f"المرحلة النشطة: {processed_data['step']}")
-    print("-" * 20)
-    print(f"المحتوى المنسق:\n{processed_data['content']}")
-    
-    print(footer)
-    print("تم إعداد المرحلة الخامسة بنجاح.")
-
-# استدعاء الدالة لربط المرحلة الرابعة بالخامسة
-if 'result' in locals():
-    display_ui_stage_five(result)
-else:
-    # في حال لم تكن البيانات جاهزة، نقوم بتوليد بيانات افتراضية للتجربة
-    sample_data = {
-        "content": "محتوى تجريبي للمرحلة الخامسة",
-        "status": "جاهز للعرض",
-        "step": 5
-    }
-    display_ui_stage_five(sample_data)# --- المرحلة الخامسة: واجهة التفاعل والعرض النهائي ---
-
-def display_ui_stage_five(processed_data):
-    """
-    تقوم هذه الدالة بعرض النتائج التي تمت معالجتها في المرحلة الرابعة
-    بشكل منسق وجذاب للمستخدم.
-    """
-    header = "================================"
-    title = "       نظام إدارة المحتوى التعليمي       "
-    footer = "================================"
-    
-    # تنسيق العرض (UI Layout)
-    print(header)
-    print(title)
-    print(header)
-    
-    # عرض المحتوى المعالج
-    print(f"الحالة الحالية: {processed_data['status']}")
-    print(f"المرحلة النشطة: {processed_data['step']}")
-    print("-" * 20)
-    print(f"المحتوى المنسق:\n{processed_data['content']}")
-    
-    print(footer)
-    print("تم إعداد المرحلة الخامسة بنجاح.")
-
-# استدعاء الدالة لربط المرحلة الرابعة بالخامسة
-if 'result' in locals():
-    display_ui_stage_five(result)
-else:
-    # في حال لم تكن البيانات جاهزة، نقوم بتوليد بيانات افتراضية للتجربة
-    sample_data = {
-        "content": "محتوى تجريبي للمرحلة الخامسة",
-        "status": "جاهز للعرض",
-        "step": 5
-    }
-    display_ui_stage_five(sample_data)# --- المرحلة الخامسة: واجهة التفاعل والعرض النهائي ---
-
-def display_ui_stage_five(processed_data):
-    """
-    تقوم هذه الدالة بعرض النتائج التي تمت معالجتها في المرحلة الرابعة
-    بشكل منسق وجذاب للمستخدم.
-    """
-    header = "================================"
-    title = "       نظام إدارة المحتوى التعليمي       "
-    footer = "================================"
-    
-    # تنسيق العرض (UI Layout)
-    print(header)
-    print(title)
-    print(header)
-    
-    # عرض المحتوى المعالج
-    print(f"الحالة الحالية: {processed_data['status']}")
-    print(f"المرحلة النشطة: {processed_data['step']}")
-    print("-" * 20)
-    print(f"المحتوى المنسق:\n{processed_data['content']}")
-    
-    print(footer)
-    print("تم إعداد المرحلة الخامسة بنجاح.")
-
-# استدعاء الدالة لربط المرحلة الرابعة بالخامسة
-if 'result' in locals():
-    display_ui_stage_five(result)
-else:
-    # في حال لم تكن البيانات جاهزة، نقوم بتوليد بيانات افتراضية للتجربة
-    sample_data = {
-        "content": "محتوى تجريبي للمرحلة الخامسة",
-        "status": "جاهز للعرض",
-        "step": 5
-    }# --- المرحلة الخامسة: واجهة التفاعل والعرض النهائي ---
-
-def display_ui_stage_five(processed_data):
-    """
-    تقوم هذه الدالة بعرض النتائج التي تمت معالجتها في المرحلة الرابعة
-    بشكل منسق وجذاب للمستخدم.
-    """
-    header = "================================"
-    title = "       نظام إدارة المحتوى التعليمي       "
-    footer = "================================"
-    
-    # تنسيق العرض (UI Layout)
-    print(header)
-    print(title)
-    print(header)
-    
-    # عرض المحتوى المعالج
-    print(f"الحالة الحالية: {processed_data['status']}")
-    print(f"المرحلة النشطة: {processed_data['step']}")
-    print("-" * 20)
-    print(f"المحتوى المنسق:\n{processed_data['content']}")
-    
-    print(footer)
-    print("تم إعداد المرحلة الخامسة بنجاح.")
-
-# استدعاء الدالة لربط المرحلة الرابعة بالخامسة
-if 'result' in locals():
-    display_ui_stage_five(result)
-else:
-    # في حال لم تكن البيانات جاهزة، نقوم بتوليد بيانات افتراضية للتجربة
-    sample_data = {
-        "content": "محتوى تجريبي للمرحلة الخامسة",
-        "status": "جاهز للعرض",
-        "step": 5
-    }# --- المرحلة الخامسة: واجهة التفاعل والعرض النهائي ---
-
-def display_ui_stage_five(processed_data):
-    """
-    تقوم هذه الدالة بعرض النتائج التي تمت معالجتها في المرحلة الرابعة
-    بشكل منسق وجذاب للمستخدم.
-    """
-    header = "================================"
-    title = "       نظام إدارة المحتوى التعليمي       "
-    footer = "================================"
-    
-    # تنسيق العرض (UI Layout)
-    print(header)
-    print(title)
-    print(header)
-    
-    # عرض المحتوى المعالج
-    print(f"الحالة الحالية: {processed_data['status']}")
-    print(f"المرحلة النشطة: {processed_data['step']}")
-    print("-" * 20)
-    print(f"المحتوى المنسق:\n{processed_data['content']}")
-    
-    print(footer)
-    print("تم إعداد المرحلة الخامسة بنجاح.")
-
-# استدعاء الدالة لربط المرحلة الرابعة بالخامسة
-if 'result' in locals():
-    display_ui_stage_five(result)
-else:
-    # في حال لم تكن البيانات جاهزة، نقوم بتوليد بيانات افتراضية للتجربة
-    sample_data = {
-        "content": "محتوى تجريبي للمرحلة الخامسة",
-        "status": "جاهز للعرض",
-        "step": 5
-    }
-    display_ui_stage_five(sample_data)
-    display_ui_stage_five(sample_data)
+</body>
+</html>
