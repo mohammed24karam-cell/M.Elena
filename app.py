@@ -42,5 +42,5 @@ if user_input:
             response = model.generate_content(f"أنت مساعدة ذكية اسمك M.Elena، ردي بـ {lang}: " + user_input)
             st.markdown(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
-        except:
-            st.error("أهلاً بكِ! جربي مراسلتي مرة أخرى.")
+       except Exception as e:
+            st.error(f"حدث خطأ بسيط: {e}")
